@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# RiseLab Planning Skills installer
+# Symlinks each skill into your Claude Code skills directory.
+set -e
+
+SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
+SRC="$(cd "$(dirname "$0")" && pwd)"
+
+mkdir -p "$SKILLS_DIR"
+
+for dir in "$SRC"/*/; do
+  skill="$(basename "$dir")"
+  [ -f "$dir/SKILL.md" ] || continue
+  target="$SKILLS_DIR/$skill"
+  rm -rf "$target"
+  ln -s "$dir" "$target"
+  echo "linked: $skill"
+done
+
+echo ""
+echo "RiseLab Planning Skills installed to $SKILLS_DIR"
+echo "Available: saas-planning-partner, riselab-data-analytics-partner, riselab-data-science-partner"
+echo "Invoke a skill by name in Claude Code, or just open any SKILL.md and paste it into a chat."
